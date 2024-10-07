@@ -1,0 +1,69 @@
+{
+    "version": 8,
+    "configurePresets": [
+        {
+            "name": "base",
+            "hidden": true,
+            "cacheVariables": {
+                "CMAKE_CXX_FLAGS": "-Wfatal-errors -Wno-implicit-const-int-float-conversion -Wno-unused-const-variable",
+                "CMAKE_C_COMPILER": "/usr/bin/gcc",
+                "CMAKE_CXX_COMPILER": "/usr/bin/g++"
+            },
+            "environment": {
+                "CCACHE_DIR": "${sourceDir}/build/ccache/",
+                "CCACHE_SLOPPINESS": "clang_index_store"
+            },
+            "warnings": {
+                "dev": false
+            },
+            "generator": "Ninja"
+        },
+        {
+            "name": "Debug",
+            "hidden": true,
+            "inherits": "base",
+            "binaryDir": "${sourceDir}/build/Debug",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
+                "CMAKE_BUILD_TYPE": "Debug"
+            }
+        },
+        {
+            "name": "Release",
+            "inherits": "base",
+            "hidden": true,
+            "binaryDir": "${sourceDir}/build/Release",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/install/${presetName}",
+                "CMAKE_BUILD_TYPE": "Release"
+            }
+        },
+        {
+            "name": "clang",
+            "displayName": "Clang 20.0.0 (sycl)",
+            "description": "Clang 20.0.0 (sycl)",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_C_COMPILER": "${userHome}/sycl_workspace/llvm/build/install/bin/clang",
+                "CMAKE_CXX_COMPILER": "${userHome}/sycl_workspace/llvm/build/install/bin/clang++",
+                "CMAKE_CXX_COMPILER_LAUNCHER": "/usr/bin/ccache",
+                "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+                "CMAKE_BUILD_TYPE": "Debug"
+            },
+            "environment": {
+                "CCACHE_DIR": "${sourceDir}/build/ccache/",
+                "CCACHE_SLOPPINESS": "clang_index_store",
+                "LD_LIBRARY_PATH": "${userHome}/sycl_workspace/llvm/build/install/lib"
+            }
+        }
+    ],
+    "buildPresets":[
+        {
+        "name": "default",
+        "configurePreset": "clang",
+        "targets": ["editor", "core"],
+        "jobs": 12
+        }
+    ]
+}

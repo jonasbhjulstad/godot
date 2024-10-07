@@ -1,0 +1,61 @@
+cmake_minimum_required(VERSION 3.29)
+project(godot)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+#components
+
+option("ENABLE_MINIZIP" "Enable ZIP archive support using minizip" ON)
+option("ENABLE_BROTLI" "Enable Brotli for decompresson and WOFF2 fonts support" ON)
+option("ENABLE_XAUDIO2" "Enable the XAudio2 audio driver" OFF)
+option("ENABLE_VULKAN" "Enable the vulkan rendering driver" ON)
+option("ENABLE_OPENGL3" "Enable the OpenGL/GLES3 rendering driver" ON)
+option("ENABLE_D3D12" "Enable the Direct3D 12 rendering driver" OFF)
+option("ENABLE_OPENXR" "Enable the OpenXR driver" ON)
+option("ENABLE_VOLK" "Use the volk library to load the Vulkan loader dynamically" ON)
+option("DISABLE_EXCEPTIONS" "Force disabling exception handling code" ON)
+option("CUSTOM_MODULES" "A list of comma-separated directory paths containing custom modules to build." "")
+option("CUSTOM_MODULES_RECURSIVE" "Detect custom modules recursively for each specified path." ON)
+include(cmake/external_packages.cmake)
+
+set(EMBREE_TASKING_SCHEDULER "TBB")
+set(TBB_DIR "/opt/intel/oneapi/tbb/latest/lib/cmake/tbb/")
+set(GODOT_PLATFORM "linuxbsd")
+set(GODOT_PLATFORM_INCLUDE_DIR "${PROJECT_SOURCE_DIR}/platform/linuxbsd/")
+#packages
+option(USE_BUILTIN_CERTS "Use the builtin certificates" OFF)
+include_directories(${GODOT_PLATFORM_INCLUDE_DIR})
+add_subdirectory(thirdparty)
+add_subdirectory(core)
+if($ENV{CPLUS_INCLUDE_PATH})
+include_directories($ENV{CPLUS_INCLUDE_PATH})
+endif()
+if($ENV{C_INCLUDE_PATH})
+include_directories($ENV{C_INCLUDE_PATH})
+endif()
+# SConscript("servers/SCsub")
+# SConscript("scene/SCsub")
+# if env.editor_build:
+    # SConscript("editor/SCsub")
+# SConscript("drivers/SCsub")
+
+# SConscript("platform/SCsub")
+# SConscript("modules/SCsub")
+# if env["tests"]:
+    # SConscript("tests/SCsub")
+# SConscript("main/SCsub")
+
+
+# SConscript("platform/" + env["platform"] + "/SCsub")  # Build selected platform.
+function(add_glob_cwd_target name)
+    file(GLOB target_sources ${CMAKE_CURRENT_LIST_DIR}/*.cpp)
+    add_library(${name} target_sources)
+endfunction()
+add_subdirectory(servers)
+add_subdirectory(scene)
+add_subdirectory(editor)
+add_subdirectory(platform)
+add_subdirectory(modules)
+add_subdirectory(main)
