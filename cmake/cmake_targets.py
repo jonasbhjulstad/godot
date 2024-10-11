@@ -12,11 +12,11 @@ def glob_relative_files(directory, pattern, recursive):
 
 
 def glob_headers(directory, recursive):
-    return glob_relative_files(directory, "**/*.h", recursive) + glob_relative_files(directory, "**/*.hpp", recursive)
+    return glob_relative_files(directory, "*.h", recursive) + glob_relative_files(directory, "*.hpp", recursive)
 
 
 def glob_sources(directory, recursive):
-    return glob_relative_files(directory,  "**/*.c", recursive) + glob_relative_files(directory,  "**/*.cpp", recursive)
+    return glob_relative_files(directory,  "*.c", recursive) + glob_relative_files(directory,  "*.cpp", recursive)
 
 
 def add_target(directory, target_name, recursive=True, writemode='w', includes=[], definitions=[], include_pwd = False):

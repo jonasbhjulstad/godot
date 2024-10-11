@@ -1,0 +1,7 @@
+set bind-root false
+set traversal IgnoreUnlessSpelledInSource
+set print-matcher true
+#enable output dump
+enable output diag
+
+m functionDecl(unless(isExpansionInSystemHeader()), isDefinition(), unless(isExpansionInMainFile())).bind("functionDecls")
